@@ -32,4 +32,6 @@ public class ResourceController {
     public String helloAdmin(){
         return "Hello Admin";
     }
+
+
 }
