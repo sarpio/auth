@@ -18,7 +18,7 @@ public class ResourceController {
     @GetMapping({"/"})
     public String all(){
         String user = loggedIn.getUserName().toString();
-        return "Hello user: " + user;
+        return "Hello user with Id: " + user;
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
@@ -32,6 +32,4 @@ public class ResourceController {
     public String helloAdmin(){
         return "Hello Admin";
     }
-
-
 }

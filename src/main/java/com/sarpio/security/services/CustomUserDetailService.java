@@ -2,10 +2,8 @@ package com.sarpio.security.services;
 
 import com.sarpio.security.model.CustomUserDetails;
 import com.sarpio.security.model.UsersEntity;
-
 import com.sarpio.security.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

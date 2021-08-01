@@ -3,7 +3,6 @@ package com.sarpio.security.model;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-
 import javax.persistence.*;
 
 @Entity
