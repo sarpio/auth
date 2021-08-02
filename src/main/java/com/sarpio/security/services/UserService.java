@@ -4,7 +4,6 @@ import com.sarpio.security.controllers.dto.RoleDto;
 import com.sarpio.security.controllers.dto.UserDto;
 import com.sarpio.security.model.RoleEntity;
 import com.sarpio.security.model.UsersEntity;
-import com.sarpio.security.repository.UserDetailsRepository;
 import com.sarpio.security.repository.UsersRepository;
 import com.sarpio.security.utils.EntityDtoMapper;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -24,7 +22,6 @@ public class UserService {
 
     private final UsersRepository usersRepository;
     private final PasswordEncoder passwordEncoder;
-    private final UserDetailsRepository userDetailsRepository;
 
     public List<UserDto> showAllUsers() {
         return usersRepository.findAll().stream()
