@@ -31,6 +31,11 @@ public class UserController {
         return userService.showAllUsers();
     }
 
+    @GetMapping("/{id}")
+    public UserDto getUserById(Long id) {
+        return userService.getUserById(id);
+    }
+
     @PutMapping("/edit/{id}")
     public UserDto editUser(@RequestBody UserDto dto, @PathVariable("id") Long id) {
         return userService.saveUser(id, dto);

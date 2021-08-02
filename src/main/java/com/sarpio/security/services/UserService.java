@@ -4,7 +4,7 @@ import com.sarpio.security.controllers.dto.RoleDto;
 import com.sarpio.security.controllers.dto.UserDto;
 import com.sarpio.security.model.RoleEntity;
 import com.sarpio.security.model.UsersEntity;
-import com.sarpio.security.repository.RoleRepository;
+import com.sarpio.security.repository.UserDetailsRepository;
 import com.sarpio.security.repository.UsersRepository;
 import com.sarpio.security.utils.EntityDtoMapper;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -22,20 +23,8 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UsersRepository usersRepository;
-    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-
-
-//    public UserDto saveUser(Long id, UserDto dto) {
-//        Set<RoleDto> setRoleDto = dto.getRole();
-//        Set<RoleEntity> roleEntities = setRoleDto.stream().map(EntityDtoMapper::map).collect(Collectors.toSet());
-//        UsersEntity entity = EntityDtoMapper.map(dto);
-//        entity.setPassword(passwordEncoder.encode(dto.getPassword()));
-//        entity.setActive(1);
-//        entity.setRoleEntities(roleEntities);
-//        usersRepository.save(entity);
-//        return dto;
-//    }
+    private final UserDetailsRepository userDetailsRepository;
 
     public List<UserDto> showAllUsers() {
         return usersRepository.findAll().stream()
@@ -60,6 +49,11 @@ public class UserService {
             entity.setId(id);
         }
         usersRepository.save(entity);
-        return dto;
+        return EntityDtoMapper.map(entity);
+    }
+
+    public UserDto getUserById(Long id) {
+        UsersEntity entity = usersRepository.findById(id).orElseThrow(() -> new NotFoundException("No user found with Id: " + id));
+        return EntityDtoMapper.map(entity);
     }
 }

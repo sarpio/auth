@@ -1,6 +1,5 @@
 package com.sarpio.security.model;
 
-import io.swagger.v3.oas.annotations.Hidden;
 import lombok.*;
 import javax.persistence.*;
 import java.util.HashSet;
@@ -10,8 +9,7 @@ import java.util.Set;
 @Table(name = "users")
 @Getter
 @Setter
-@NoArgsConstructor
-
+@RequiredArgsConstructor
 public class UsersEntity {
 
     @Id

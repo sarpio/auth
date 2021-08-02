@@ -2,10 +2,13 @@ package com.sarpio.security.utils;
 
 import com.sarpio.security.controllers.dto.AddRoleDto;
 import com.sarpio.security.controllers.dto.RoleDto;
+import com.sarpio.security.controllers.dto.UserDetailDto;
 import com.sarpio.security.controllers.dto.UserDto;
 import com.sarpio.security.model.RoleEntity;
+import com.sarpio.security.model.UserDetailEntity;
 import com.sarpio.security.model.UsersEntity;
 import org.springframework.beans.BeanUtils;
+
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -42,8 +45,8 @@ public class EntityDtoMapper {
         return entity;
     }
 
-    public static RoleEntity mapRead(AddRoleDto dto) {
-        RoleEntity entity = new RoleEntity();
+    public static UserDetailEntity map(UserDetailDto dto) {
+        UserDetailEntity entity = new UserDetailEntity();
         BeanUtils.copyProperties(dto, entity);
         return entity;
     }
