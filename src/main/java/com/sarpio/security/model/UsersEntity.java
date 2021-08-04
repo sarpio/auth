@@ -29,17 +29,12 @@ public class UsersEntity {
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<RoleEntity> roleEntities = new HashSet<>();
 
-//    @OneToOne(mappedBy="usersEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-//    @PrimaryKeyJoinColumn
-//    private UserDetailEntity userDetails;
-
     public UsersEntity(UsersEntity usersEntity) {
         this.active = usersEntity.getActive();
         this.roleEntities = usersEntity.getRoleEntities();
         this.username = usersEntity.getUsername();
         this.id = usersEntity.getId();
         this.password = usersEntity.getPassword();
-//        this.userDetails = usersEntity.getUserDetails();
         this.roleEntities = usersEntity.getRoleEntities();
     }
 }

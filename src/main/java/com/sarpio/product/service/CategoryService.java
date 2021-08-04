@@ -5,11 +5,9 @@ import com.sarpio.product.model.CategoryEntity;
 import com.sarpio.product.repository.CategoryRepository;
 import com.sarpio.product.utils.EntityDtoMapper;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.procedure.spi.ParameterRegistrationImplementor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
-
 import java.util.List;
 import java.util.stream.Collectors;
 

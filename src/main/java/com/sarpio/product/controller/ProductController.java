@@ -1,15 +1,45 @@
 package com.sarpio.product.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.sarpio.product.controller.dto.ProductDto;
+import com.sarpio.product.model.ProductEntity;
+import com.sarpio.product.service.ProductService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/product")
+@RequiredArgsConstructor
 public class ProductController {
 
-    @GetMapping("/")
-    public String getProduct() {
-        return "Product";
+    private final ProductService productService;
+
+    @PostMapping("/")
+    public ProductDto saveNewProduct(@RequestBody ProductDto dto) {
+        dto.setId(null);
+        return productService.saveNewProduct(dto);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteProduct(@PathVariable("id") Long id) {
+        return productService.deleteProduct(id);
+    }
+
+    @PutMapping("/{id}")
+    public ProductDto editProduct(@PathVariable("id") Long id, @RequestBody ProductDto dto) {
+        return productService.editProduct(id, dto);
+    }
+
+    @GetMapping("/")
+    public List<ProductDto> showProducts() {
+        return productService.listAllProducts();
+    }
+
+    @GetMapping("/{id}")
+    public ProductDto getProductById(@PathVariable("id") Long id) {
+        return productService.getProductById(id);
+    }
+
 }
