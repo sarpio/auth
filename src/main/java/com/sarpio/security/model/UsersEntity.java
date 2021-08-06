@@ -1,5 +1,6 @@
 package com.sarpio.security.model;
 
+import com.sarpio.order.model.OrderEntity;
 import lombok.*;
 import javax.persistence.*;
 import java.util.HashSet;
@@ -29,6 +30,9 @@ public class UsersEntity {
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<RoleEntity> roleEntities = new HashSet<>();
 
+    @OneToMany(mappedBy = "user")
+    private Set<OrderEntity> order;
+
     public UsersEntity(UsersEntity usersEntity) {
         this.active = usersEntity.getActive();
         this.roleEntities = usersEntity.getRoleEntities();
@@ -36,5 +40,6 @@ public class UsersEntity {
         this.id = usersEntity.getId();
         this.password = usersEntity.getPassword();
         this.roleEntities = usersEntity.getRoleEntities();
+        this.order = usersEntity.getOrder();
     }
 }
