@@ -1,5 +1,8 @@
 package com.sarpio.security.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sarpio.order.model.OrderEntity;
 import lombok.*;
 import javax.persistence.*;

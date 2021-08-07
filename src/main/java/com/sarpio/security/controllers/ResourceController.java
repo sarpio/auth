@@ -16,20 +16,20 @@ public class ResourceController {
     public final UserLoggedService loggedIn;
 
     @GetMapping({"/"})
-    public String all(){
-        String user = loggedIn.getUserName().toString();
+    public String all() {
+        Integer user = loggedIn.getUserName();
         return "Hello user with Id: " + user;
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping({"/user"})
-    public String helloUser(){
+    public String helloUser() {
         return "Hello User";
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping({"/admin"})
-    public String helloAdmin(){
+    public String helloAdmin() {
         return "Hello Admin";
     }
 }

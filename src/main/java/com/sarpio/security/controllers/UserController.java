@@ -16,17 +16,17 @@ public class UserController {
     private final UserService userService;
 
     @Transactional(value = Transactional.TxType.REQUIRED)
-    @PostMapping("/add")
+    @PostMapping("/")
     public UserDto addNewUser(@RequestBody UserDto dto) {
         return userService.saveUser(0L, dto);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity deleteById(@PathVariable("id") Long id) {
         return userService.deleteUserById(id);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/")
     public List<UserDto> showUsers() {
         return userService.showAllUsers();
     }
@@ -36,7 +36,7 @@ public class UserController {
         return userService.getUserById(id);
     }
 
-    @PutMapping("/edit/{id}")
+    @PutMapping("/{id}")
     public UserDto editUser(@RequestBody UserDto dto, @PathVariable("id") Long id) {
         return userService.saveUser(id, dto);
     }

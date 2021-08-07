@@ -14,3 +14,5 @@ spring:
     username: root
     password: password
     url: "jdbc:mysql://localhost:3306/authorization_db"
+
+

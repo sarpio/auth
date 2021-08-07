@@ -34,4 +34,9 @@ public class CategoryController {
     public List<CategoryDto> showCategories() {
         return categoryService.listAllCategories();
     }
+
+    @GetMapping("/{id}")
+    public CategoryDto getCategoryById(@PathVariable(name = "id") Long id) {
+        return categoryService.getCategoryById(id);
+    }
 }

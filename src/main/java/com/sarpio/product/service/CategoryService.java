@@ -45,4 +45,10 @@ public class CategoryService {
                 .collect(Collectors.toList());
         return categories;
     }
+
+    public CategoryDto getCategoryById(Long id) {
+        CategoryEntity entity = categoryRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("There is no category with Id: " + id));
+        return EntityDtoMapper.map(entity);
+    }
 }

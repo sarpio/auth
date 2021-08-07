@@ -1,13 +1,13 @@
 package com.sarpio.order.model;
 
-import com.sarpio.product.model.ProductEntity;
+import com.fasterxml.jackson.annotation.*;
 import com.sarpio.security.model.UsersEntity;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -16,7 +16,8 @@ import java.util.Set;
 @Setter
 @Table(name = "orders")
 @RequiredArgsConstructor
-public class OrderEntity {
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
+public class OrderEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,17 +33,18 @@ public class OrderEntity {
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-//    @ColumnDefault(value = "ENTERED")
     private StatusEnum status;
 
     @Column(name = "total_value")
     private Double totalValue;
 
+
     @OneToMany(mappedBy = "order")
     private Set<OrderItemEntity> itemEntity;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+
     private UsersEntity user;
 
 }
