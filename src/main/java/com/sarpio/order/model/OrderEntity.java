@@ -39,7 +39,8 @@ public class OrderEntity implements Serializable {
     private Double totalValue;
 
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order",
+            cascade = CascadeType.REMOVE)
     private Set<OrderItemEntity> itemEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)
