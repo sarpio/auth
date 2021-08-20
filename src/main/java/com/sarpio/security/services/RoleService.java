@@ -1,6 +1,6 @@
 package com.sarpio.security.services;
 
-import com.sarpio.security.controllers.dto.AddRoleDto;
+import com.sarpio.exception.ApiRequestException;
 import com.sarpio.security.controllers.dto.RoleDto;
 import com.sarpio.security.model.RoleEntity;
 import com.sarpio.security.repository.RoleRepository;
@@ -8,7 +8,7 @@ import com.sarpio.security.utils.EntityDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.webjars.NotFoundException;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,11 +23,11 @@ public class RoleService {
         RoleDto dto = new RoleDto();
         RoleEntity roleEntity = roleRepository
                 .findById(id)
-                .orElseThrow(() -> new NotFoundException("Not found role with id: " + id));
+                .orElseThrow(() -> new ApiRequestException("Not found role with id: " + id));
         return EntityDtoMapper.map(roleEntity);
     }
 
-    public RoleEntity addNewRole(AddRoleDto dto) {
+    public RoleEntity addNewRole(RoleDto dto) {
         RoleEntity entity = new RoleEntity();
         entity.setRole(dto.getRole());
         return roleRepository.save(entity);
@@ -36,7 +36,7 @@ public class RoleService {
     public ResponseEntity deleteRoleById(Long id) {
         //TODO Add code with checking if role is being used and assign user role instead
         roleRepository.findById(id)
-                .orElseThrow(()-> new NotFoundException("There is o role with id: "+id));
+                .orElseThrow(()-> new ApiRequestException("There is no role with id: "+id));
         roleRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }

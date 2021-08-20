@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 @Entity
 @Getter
@@ -21,9 +22,14 @@ public class OrderItemEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "Quantity cannot be null")
+    @NotEmpty(message = "Price cannot be empty")
+    @Min(1)
     @Column(name = "quantity")
     private Integer quantity;
 
+    @DecimalMin(value = "0.00", inclusive = false)
+    @Digits(integer=6, fraction=2)
     @Column(name = "value")
     private Double value;
 

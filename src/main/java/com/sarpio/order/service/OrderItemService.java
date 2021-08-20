@@ -1,5 +1,6 @@
 package com.sarpio.order.service;
 
+import com.sarpio.exception.ApiRequestException;
 import com.sarpio.order.controller.dto.OrderItemDto;
 import com.sarpio.order.model.OrderEntity;
 import com.sarpio.order.model.OrderItemEntity;
@@ -9,7 +10,6 @@ import com.sarpio.order.utils.EntityDtoMapper;
 import com.sarpio.product.model.ProductEntity;
 import com.sarpio.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
-import net.bytebuddy.dynamic.scaffold.TypeWriter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
@@ -40,23 +40,23 @@ public class OrderItemService {
     }
 
     public OrderItemDto saveItem(OrderItemDto dto) {
-        ProductEntity product = productRepository.findById(dto.getProductId()).orElseThrow(()-> new NotFoundException("No product with Id: " + dto.getProductId()));
+        ProductEntity product = productRepository.findById(dto.getProductId()).orElseThrow(() -> new ApiRequestException("No product with Id: " + dto.getProductId()));
         Double price = product.getPrice();
         OrderItemEntity entity = EntityDtoMapper.map(dto);
         entity.setId(null);
         entity.setValue(price * dto.getQuantity());
         itemRepository.save(entity);
-        OrderEntity order = orderRepository.findById(dto.getOrderId()).orElseThrow(()-> new NotFoundException("No order with Id: " + dto.getOrderId()));
+        OrderEntity order = orderRepository.findById(dto.getOrderId()).orElseThrow(() -> new ApiRequestException("No order with Id: " + dto.getOrderId()));
         order.setTotalValue(rounding(updateOrderValue(dto.getOrderId())));
         orderRepository.save(order);
         return EntityDtoMapper.map(entity);
     }
 
     public ResponseEntity deleteItem(Long id) {
-        OrderItemEntity item = itemRepository.findById(id).orElseThrow(()->new NotFoundException("No Item with Id: " +id));
+        OrderItemEntity item = itemRepository.findById(id).orElseThrow(() -> new ApiRequestException("No Item with Id: " + id));
         Long orderId = item.getOrder().getId();
         itemRepository.deleteById(id);
-        OrderEntity order = orderRepository.findById(orderId).orElseThrow(()-> new NotFoundException("No order with Id: " + orderId));
+        OrderEntity order = orderRepository.findById(orderId).orElseThrow(() -> new ApiRequestException("No order with Id: " + orderId));
         order.setTotalValue(rounding(updateOrderValue(orderId)));
         orderRepository.save(order);
         return ResponseEntity.ok().build();
@@ -67,20 +67,19 @@ public class OrderItemService {
     }
 
     public Double rounding(Double num) {
-        Double newNum = num * 100;
-        Double x = Double.valueOf(Math.round(newNum));
-        Double rounded = x/100;
-        return rounded;
+        double newNum = num * 100;
+        double x = (double) Math.round(newNum);
+        return x / 100;
     }
 
     public void changeQuantity(Long id, Integer qty) {
-        OrderItemEntity itemEntity = itemRepository.findById(id).orElseThrow(()->new NotFoundException("No Item with Id: " +id));
-        ProductEntity product = productRepository.findById(itemEntity.getProduct().getId()).orElseThrow(()-> new NotFoundException("No product with Id: " + itemEntity.getProduct().getId()));
+        OrderItemEntity itemEntity = itemRepository.findById(id).orElseThrow(() -> new ApiRequestException("No Item with Id: " + id));
+        ProductEntity product = productRepository.findById(itemEntity.getProduct().getId()).orElseThrow(() -> new ApiRequestException("No product with Id: " + itemEntity.getProduct().getId()));
         Double price = product.getPrice();
         itemEntity.setQuantity(qty);
         itemEntity.setValue(price * qty);
         itemRepository.save(itemEntity);
-        OrderEntity order = orderRepository.findById(itemEntity.getProduct().getId()).orElseThrow(()-> new NotFoundException("No order with Id: " + itemEntity.getProduct().getId()));
+        OrderEntity order = orderRepository.findById(itemEntity.getProduct().getId()).orElseThrow(() -> new ApiRequestException("No order with Id: " + itemEntity.getProduct().getId()));
         order.setTotalValue(rounding(updateOrderValue(itemEntity.getProduct().getId())));
         orderRepository.save(order);
     }

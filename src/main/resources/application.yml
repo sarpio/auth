@@ -1,4 +1,9 @@
 server:
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-exception: false
+    include-stacktrace: on_param
   port: 8080
 spring:
   jpa:

@@ -2,10 +2,12 @@ package com.sarpio.security.controllers;
 
 import com.sarpio.security.controllers.dto.UserDto;
 import com.sarpio.security.services.UserService;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -17,7 +19,7 @@ public class UserController {
 
     @Transactional(value = Transactional.TxType.REQUIRED)
     @PostMapping("/")
-    public UserDto addNewUser(@RequestBody UserDto dto) {
+    public UserDto addNewUser(@ApiParam(name = "Add new user") @RequestBody @Valid UserDto dto) {
         return userService.saveUser(0L, dto);
     }
 
@@ -37,7 +39,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public UserDto editUser(@RequestBody UserDto dto, @PathVariable("id") Long id) {
+    public UserDto editUser(@Valid @RequestBody UserDto dto, @PathVariable("id") Long id) {
         return userService.saveUser(id, dto);
     }
 }

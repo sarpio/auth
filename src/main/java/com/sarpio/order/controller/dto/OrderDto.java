@@ -1,5 +1,6 @@
 package com.sarpio.order.controller.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sarpio.order.model.OrderItemEntity;
 import com.sarpio.order.model.StatusEnum;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -10,6 +11,7 @@ import java.util.Set;
 
 @Getter
 @Setter
+@JsonIgnoreProperties(value = {"id"}, allowGetters = true)
 public class OrderDto {
 
     private Long id;

@@ -1,18 +1,20 @@
 package com.sarpio.security.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sarpio.order.model.OrderEntity;
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
-@Table(name = "users")
 @Getter
 @Setter
+@Entity
+@Table(name = "users")
 @RequiredArgsConstructor
 public class UsersEntity {
 
@@ -22,10 +24,17 @@ public class UsersEntity {
     private Long id;
 
     @Column(name = "password")
+    @NotBlank(message = "password can't be blank")
+    @NotEmpty(message = "username can't be empty")
     private String password;
 
     @Column(name = "username")
+    @Length(min = 2, max = 30, message = "Name must be between 2-30 characters. ")
+    @Pattern(regexp = "^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$", message = "Name is invalid.")
     private String username;
+
+    @Email(message = "Enter a valid email address.")
+    private String email;
 
     @Column(name = "active")
     private int active;

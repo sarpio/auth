@@ -22,7 +22,7 @@ public class RoleController {
     }
 
     @PostMapping("/")
-    public AddRoleDto addNewRole(@RequestBody AddRoleDto dto) {
+    public RoleDto addNewRole(@RequestBody RoleDto dto) {
         roleService.addNewRole(dto);
         return dto;
     }

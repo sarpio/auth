@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Set;
@@ -22,6 +23,8 @@ public class OrderEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank(message = "Order number cannot be blank")
+    @NotEmpty(message = "Order number cannot be empty")
     @Column(name = "order_number")
     private String orderNumber;
 
@@ -35,6 +38,8 @@ public class OrderEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private StatusEnum status;
 
+    @DecimalMin(value = "0.0")
+    @Digits(integer=6, fraction=2)
     @Column(name = "total_value")
     private Double totalValue;
 

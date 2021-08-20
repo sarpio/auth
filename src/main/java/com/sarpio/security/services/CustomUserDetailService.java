@@ -1,5 +1,6 @@
 package com.sarpio.security.services;
 
+import com.sarpio.exception.ApiRequestException;
 import com.sarpio.security.model.CustomUserDetails;
 import com.sarpio.security.model.UsersEntity;
 import com.sarpio.security.repository.UsersRepository;
@@ -21,7 +22,7 @@ public class CustomUserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         Optional<UsersEntity> userByLogin = userRepository.findByUsername(username);
-        userByLogin.orElseThrow(() -> new UsernameNotFoundException("Username does not exists"));
+        userByLogin.orElseThrow(() -> new ApiRequestException("Username does not exists"));
         return userByLogin.map(CustomUserDetails::new).get();
     }
 

@@ -2,14 +2,17 @@ package com.sarpio.security.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "role")
 @Getter
 @Setter
+@ToString
 public class RoleEntity {
 
     @Id
@@ -18,8 +21,7 @@ public class RoleEntity {
     private Long roleId;
 
     @Column(name = "role")
+    @NotBlank(message = "role name is mandatory")
+    @Size(min = 3, max = 20)
     private String role;
-
-//    @ManyToMany(mappedBy = "roleEntities")
-//    private Set<UsersEntity> users = new HashSet<>();
 }

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
@@ -22,4 +23,6 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
 
     OrderEntity getByIdAndUserId(Long id, Long userId);
 
+    @Query(value = "SELECT * FROM orders WHERE (:id is null or user_id = :id)", nativeQuery = true)
+    Optional<OrderEntity> findByUserId(Long id);
 }

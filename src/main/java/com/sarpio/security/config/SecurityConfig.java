@@ -14,8 +14,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    public static final String ADMIN_ROLE = "ADMIN";
+    public static final String USER_ROLE = "USER";
 
     @Autowired
     CustomUserDetailService userDetailsService;
@@ -38,9 +41,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
             @Override
             public String encode(CharSequence charSequence) {
-              return charSequence.toString();
+                return charSequence.toString();
             }
-
 
             @Override
             public boolean matches(CharSequence charSequence, String s) {
@@ -51,13 +53,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
+        http.csrf().disable() //wylaczenie csrf tylko do testow
                 .authorizeRequests()
-                .antMatchers("/admin").hasRole("ADMIN")
-                .antMatchers("/user").hasAnyRole("ADMIN", "USER")
-                .antMatchers("/").permitAll()
+                .antMatchers("/**").permitAll()
+                .anyRequest()
+                .authenticated()
                 .and().httpBasic()
                 .and().formLogin();
+//        http.csrf().disable()
+//                .authorizeRequests()
+//                .antMatchers("/admin").hasRole(ADMIN_ROLE)
+//                .antMatchers("/user").hasAnyRole(ADMIN_ROLE, USER_ROLE)
+//                .antMatchers("/").permitAll()
+//                .and().httpBasic()
+//                .and().formLogin();
     }
-
 }

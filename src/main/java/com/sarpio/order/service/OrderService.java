@@ -1,32 +1,27 @@
 package com.sarpio.order.service;
 
+import com.sarpio.exception.ApiRequestException;
 import com.sarpio.order.controller.dto.OrderDto;
 import com.sarpio.order.model.OrderEntity;
 import com.sarpio.order.model.StatusEnum;
-import com.sarpio.order.repository.OrderItemRepository;
 import com.sarpio.order.repository.OrderRepository;
 import com.sarpio.order.utils.EntityDtoMapper;
-import com.sarpio.security.model.UsersEntity;
 import com.sarpio.security.services.UserLoggedService;
-import com.sarpio.security.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.webjars.NotFoundException;
 
-import javax.transaction.Transactional;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
 public class OrderService {
     private final OrderRepository orderRepository;
+
+    private Long userId;
 
     public Set<OrderDto> getAllOrders() {
 
@@ -37,10 +32,16 @@ public class OrderService {
                 .collect(Collectors.toSet());
     }
 
-    public OrderDto getOrderById(Long id) {
-        OrderEntity orderEntity = orderRepository.findById(id).orElseThrow(() -> new NotFoundException("No order with Id: " + id));
-//        OrderEntity orderEntity = orderRepository.getByIdAndUserId(id, UserLoggedService.getUserName().longValue());
-        return EntityDtoMapper.map(orderEntity);
+    public List<OrderDto> getOrderByUserId(Long id) {
+        userId = id;
+        if (!UserLoggedService.isAdmin()) {
+            userId = UserLoggedService.getUserName();
+        }
+        return orderRepository.findAll()
+                .stream()
+                .filter(o -> o.getUser().getId().equals(userId))
+                .map(EntityDtoMapper::map)
+                .collect(Collectors.toList());
     }
 
     public OrderDto addOrder(OrderDto dto) {
@@ -56,7 +57,7 @@ public class OrderService {
     }
 
     public OrderDto changeStatus(Long id, StatusEnum status) {
-        OrderEntity orderEntity = orderRepository.findById(id).orElseThrow(() -> new NotFoundException("No order with Id: " + id));
+        OrderEntity orderEntity = orderRepository.findById(id).orElseThrow(() -> new ApiRequestException("No order with Id: " + id));
         orderEntity.setStatus(status);
         if (status == StatusEnum.SENT) {
             orderEntity.setSentDate(LocalDate.now());
@@ -66,7 +67,7 @@ public class OrderService {
     }
 
     public ResponseEntity deleteOrderById(Long id) {
-        orderRepository.findById(id).orElseThrow(()->new NotFoundException("No Order with Id: "+id));
+        orderRepository.findById(id).orElseThrow(() -> new ApiRequestException("No Order with Id: " + id));
         orderRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }

@@ -1,5 +1,6 @@
 package com.sarpio.security.services;
 
+import com.sarpio.exception.ApiRequestException;
 import com.sarpio.security.controllers.dto.RoleDto;
 import com.sarpio.security.controllers.dto.UserDto;
 import com.sarpio.security.model.RoleEntity;
@@ -10,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.webjars.NotFoundException;
+
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -29,7 +30,7 @@ public class UserService {
     }
 
     public ResponseEntity deleteUserById(Long id) {
-        usersRepository.findById(id).orElseThrow(() -> new NotFoundException("User with Id: " + id + " not exists"));
+        usersRepository.findById(id).orElseThrow(() -> new ApiRequestException("User with Id: " + id + " not exists"));
         usersRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }
@@ -42,6 +43,7 @@ public class UserService {
         entity.setActive(1);
         entity.setRoleEntities(roleEntities);
         if (id != 0) {
+            usersRepository.findById(id).orElseThrow(() -> new ApiRequestException("No user with Id: " + id));
             entity.setId(id);
         }
         usersRepository.save(entity);
@@ -49,7 +51,7 @@ public class UserService {
     }
 
     public UserDto getUserById(Long id) {
-        UsersEntity entity = usersRepository.findById(id).orElseThrow(() -> new NotFoundException("No user found with Id: " + id));
+        UsersEntity entity = usersRepository.findById(id).orElseThrow(() -> new ApiRequestException("No user found with Id: " + id));
         return EntityDtoMapper.map(entity);
     }
 }

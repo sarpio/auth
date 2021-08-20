@@ -1,13 +1,13 @@
 package com.sarpio.product.service;
 
+import com.sarpio.exception.ApiRequestException;
 import com.sarpio.product.controller.dto.CategoryDto;
 import com.sarpio.product.model.CategoryEntity;
 import com.sarpio.product.repository.CategoryRepository;
 import com.sarpio.product.utils.EntityDtoMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.stereotype.Service;
-import org.webjars.NotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,16 +23,14 @@ public class CategoryService {
         return EntityDtoMapper.map(entity);
     }
 
-    public ResponseEntity deleteCategory(Long id) {
-        categoryRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("No category with Id: " + id));
+    public void deleteCategory(Long id) {
+        CategoryEntity byId = categoryRepository.getById(id);
         categoryRepository.deleteById(id);
-        return ResponseEntity.ok().build();
     }
 
     public CategoryDto editCategory(Long id, CategoryDto dto) {
         categoryRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("There is no category with Id: " + id));
+                .orElseThrow(() -> new ApiRequestException("There is no category with Id: " + id));
         dto.setId(id);
         CategoryEntity save = EntityDtoMapper.map(dto);
         categoryRepository.save(save);
@@ -48,7 +46,7 @@ public class CategoryService {
 
     public CategoryDto getCategoryById(Long id) {
         CategoryEntity entity = categoryRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("There is no category with Id: " + id));
+                .orElseThrow(() -> new ApiRequestException("There is no category with Id: " + id));
         return EntityDtoMapper.map(entity);
     }
 }

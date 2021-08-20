@@ -4,9 +4,10 @@ import com.sarpio.order.controller.dto.OrderItemDto;
 import com.sarpio.order.service.OrderItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import static com.sarpio.security.config.SecurityConfig.ADMIN_ROLE;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,11 +31,13 @@ public class OrderItemController {
         return orderItemService.saveItem(dto);
     }
 
+    @PreAuthorize("hasRole('" + ADMIN_ROLE +"')")
     @DeleteMapping("/{id}")
     public ResponseEntity deleteItemById(@PathVariable("id") Long id) {
         orderItemService.deleteItem(id);
         return ResponseEntity.ok().build();
     }
+
     @PutMapping("/{id}")
     public void changeQuantity(@PathVariable("id") Long id, @RequestParam("qty") Integer qty) {
         orderItemService.changeQuantity(id, qty);

@@ -1,15 +1,14 @@
 package com.sarpio.order.controller;
 
+import com.sarpio.exception.ApiRequestException;
 import com.sarpio.order.controller.dto.OrderDto;
-import com.sarpio.order.model.OrderEntity;
 import com.sarpio.order.model.StatusEnum;
 import com.sarpio.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,34 +17,43 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    @GetMapping("/")
-    public Set<OrderDto> getAllOrders() {
-        return orderService.getAllOrders();
+    @GetMapping("/GetAll")
+    public ResponseEntity getAllOrders() {
+        return ResponseEntity.ok(orderService.getAllOrders());
     }
 
-    @GetMapping("/search")
-    public List<OrderDto> findOrderWithPartams(@RequestParam(value = "id", required = false) Long id,
-                                               @RequestParam(value = "userId", required = false) Long userId,
-                                               @RequestParam(value = "status", required = false) String status) {
+    @ResponseStatus(code = HttpStatus.ACCEPTED)
+    @GetMapping("/filter")
+    public ResponseEntity find(@RequestParam(value = "id", required = false) Long id,
+                               @RequestParam(value = "userId", required = false) Long userId,
+                               @RequestParam(value = "status", required = false) String status) {
 
-        return orderService.advanceOrderSearch(id, userId, status);
+        return ResponseEntity.ok(orderService.advanceOrderSearch(id, userId, status));
     }
 
-    @GetMapping("/{id}")
-    public OrderDto getOrderById(@PathVariable("id") Long id) {
-        return orderService.getOrderById(id);
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
+    @GetMapping("/ByUserId/{id}")
+    public ResponseEntity getOrderById(@PathVariable(value = "id", required = false) Long id) {
+        return ResponseEntity.ok(orderService.getOrderByUserId(id));
     }
 
-    @PostMapping("/")
-    public OrderDto addOrder(@RequestBody OrderDto dto) {
-        return orderService.addOrder(dto);
+    @PostMapping("/AddOrder")
+    public ResponseEntity<OrderDto> addOrder(@RequestBody OrderDto dto) {
+        try {
+            orderService.addOrder(dto);
+            return ResponseEntity.ok(orderService.addOrder(dto));
+        } catch (ApiRequestException ex) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
-    @PostMapping("/{id}{status}")
+    @PostMapping("/AddOrderAndStatus{id}{status}")
     public OrderDto changeOrderStatus(@RequestParam("id") Long id, @RequestParam("status") StatusEnum status) {
         return orderService.changeStatus(id, status);
     }
-    @DeleteMapping("/{id}")
+
+    @Secured("ROLE_ADMIN")
+    @DeleteMapping("/deleteById{id}")
     public ResponseEntity deleteOrderById(@PathVariable("id") Long id) {
         return orderService.deleteOrderById(id);
     }
