@@ -1,6 +1,5 @@
 package com.sarpio.security.controllers;
 
-import com.sarpio.security.controllers.dto.AddRoleDto;
 import com.sarpio.security.controllers.dto.RoleDto;
 import com.sarpio.security.services.RoleService;
 import lombok.RequiredArgsConstructor;

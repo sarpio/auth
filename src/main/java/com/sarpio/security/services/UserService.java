@@ -1,6 +1,5 @@
 package com.sarpio.security.services;
 
-import com.sarpio.exception.ApiRequestException;
 import com.sarpio.security.controllers.dto.RoleDto;
 import com.sarpio.security.controllers.dto.UserDto;
 import com.sarpio.security.model.RoleEntity;
@@ -30,7 +29,7 @@ public class UserService {
     }
 
     public ResponseEntity deleteUserById(Long id) {
-        usersRepository.findById(id).orElseThrow(() -> new ApiRequestException("User with Id: " + id + " not exists"));
+        usersRepository.findById(id).orElseThrow();
         usersRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }
@@ -43,15 +42,15 @@ public class UserService {
         entity.setActive(1);
         entity.setRoleEntities(roleEntities);
         if (id != 0) {
-            usersRepository.findById(id).orElseThrow(() -> new ApiRequestException("No user with Id: " + id));
+            usersRepository.findById(id).orElseThrow();
             entity.setId(id);
         }
         usersRepository.save(entity);
         return EntityDtoMapper.map(entity);
     }
 
-    public UserDto getUserById(Long id) {
-        UsersEntity entity = usersRepository.findById(id).orElseThrow(() -> new ApiRequestException("No user found with Id: " + id));
+    public UserDto getUserById(Long id)  {
+        UsersEntity entity = usersRepository.findById(id).orElseThrow();
         return EntityDtoMapper.map(entity);
     }
 }

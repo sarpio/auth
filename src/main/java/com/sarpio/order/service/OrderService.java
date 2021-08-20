@@ -1,6 +1,5 @@
 package com.sarpio.order.service;
 
-import com.sarpio.exception.ApiRequestException;
 import com.sarpio.order.controller.dto.OrderDto;
 import com.sarpio.order.model.OrderEntity;
 import com.sarpio.order.model.StatusEnum;
@@ -57,7 +56,7 @@ public class OrderService {
     }
 
     public OrderDto changeStatus(Long id, StatusEnum status) {
-        OrderEntity orderEntity = orderRepository.findById(id).orElseThrow(() -> new ApiRequestException("No order with Id: " + id));
+        OrderEntity orderEntity = orderRepository.findById(id).orElseThrow();
         orderEntity.setStatus(status);
         if (status == StatusEnum.SENT) {
             orderEntity.setSentDate(LocalDate.now());
@@ -67,7 +66,7 @@ public class OrderService {
     }
 
     public ResponseEntity deleteOrderById(Long id) {
-        orderRepository.findById(id).orElseThrow(() -> new ApiRequestException("No Order with Id: " + id));
+        orderRepository.findById(id).orElseThrow();
         orderRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }

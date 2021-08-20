@@ -1,6 +1,5 @@
 package com.sarpio.order.controller;
 
-import com.sarpio.exception.ApiRequestException;
 import com.sarpio.order.controller.dto.OrderDto;
 import com.sarpio.order.model.StatusEnum;
 import com.sarpio.order.service.OrderService;
@@ -17,7 +16,7 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    @GetMapping("/GetAll")
+    @GetMapping("/")
     public ResponseEntity getAllOrders() {
         return ResponseEntity.ok(orderService.getAllOrders());
     }
@@ -32,29 +31,25 @@ public class OrderController {
     }
 
     @Secured({"ROLE_USER", "ROLE_ADMIN"})
-    @GetMapping("/ByUserId/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity getOrderById(@PathVariable(value = "id", required = false) Long id) {
         return ResponseEntity.ok(orderService.getOrderByUserId(id));
     }
 
-    @PostMapping("/AddOrder")
+    @PostMapping("/")
     public ResponseEntity<OrderDto> addOrder(@RequestBody OrderDto dto) {
-        try {
-            orderService.addOrder(dto);
-            return ResponseEntity.ok(orderService.addOrder(dto));
-        } catch (ApiRequestException ex) {
-            return ResponseEntity.badRequest().build();
-        }
+        orderService.addOrder(dto);
+        return ResponseEntity.ok(orderService.addOrder(dto));
     }
 
-    @PostMapping("/AddOrderAndStatus{id}{status}")
-    public OrderDto changeOrderStatus(@RequestParam("id") Long id, @RequestParam("status") StatusEnum status) {
+    @PutMapping("/{id}{status}")
+    public OrderDto changeOrderStatus(@RequestParam("id") Long id, @RequestParam("status") StatusEnum status)  {
         return orderService.changeStatus(id, status);
     }
 
     @Secured("ROLE_ADMIN")
-    @DeleteMapping("/deleteById{id}")
-    public ResponseEntity deleteOrderById(@PathVariable("id") Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteOrderById(@PathVariable("id") Long id)  {
         return orderService.deleteOrderById(id);
     }
 }

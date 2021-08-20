@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@JsonIgnoreProperties(value = {"id"}, allowGetters = true)
+//@JsonIgnoreProperties(value = {"id"}, allowGetters = true)
 public class CategoryDto {
 
     private Long id;

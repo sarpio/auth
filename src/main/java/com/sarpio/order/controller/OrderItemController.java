@@ -27,19 +27,19 @@ public class OrderItemController {
     }
 
     @PostMapping("/")
-    public OrderItemDto saveItem(@RequestBody OrderItemDto dto) {
+    public OrderItemDto saveItem(@RequestBody OrderItemDto dto)  {
         return orderItemService.saveItem(dto);
     }
 
     @PreAuthorize("hasRole('" + ADMIN_ROLE +"')")
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteItemById(@PathVariable("id") Long id) {
+    public ResponseEntity deleteItemById(@PathVariable("id") Long id)  {
         orderItemService.deleteItem(id);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{id}")
-    public void changeQuantity(@PathVariable("id") Long id, @RequestParam("qty") Integer qty) {
+    @PutMapping("/")
+    public void changeQuantity(@RequestParam("id") Long id, @RequestParam("qty") Integer qty)  {
         orderItemService.changeQuantity(id, qty);
     }
 }

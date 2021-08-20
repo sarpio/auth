@@ -1,6 +1,5 @@
 package com.sarpio.security.services;
 
-import com.sarpio.exception.ApiRequestException;
 import com.sarpio.security.controllers.dto.RoleDto;
 import com.sarpio.security.model.RoleEntity;
 import com.sarpio.security.repository.RoleRepository;
@@ -23,7 +22,7 @@ public class RoleService {
         RoleDto dto = new RoleDto();
         RoleEntity roleEntity = roleRepository
                 .findById(id)
-                .orElseThrow(() -> new ApiRequestException("Not found role with id: " + id));
+                .orElseThrow();
         return EntityDtoMapper.map(roleEntity);
     }
 
@@ -33,10 +32,10 @@ public class RoleService {
         return roleRepository.save(entity);
     }
 
-    public ResponseEntity deleteRoleById(Long id) {
+    public ResponseEntity deleteRoleById(Long id){
         //TODO Add code with checking if role is being used and assign user role instead
         roleRepository.findById(id)
-                .orElseThrow(()-> new ApiRequestException("There is no role with id: "+id));
+                .orElseThrow();
         roleRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }
