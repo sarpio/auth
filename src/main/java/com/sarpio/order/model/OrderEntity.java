@@ -28,9 +28,11 @@ public class OrderEntity implements Serializable {
     @Column(name = "order_number")
     private String orderNumber;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     @Column(name = "order_date")
     private LocalDate orderDate;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     @Column(name = "sent_date")
     private LocalDate sentDate;
 

@@ -1,13 +1,20 @@
 package com.sarpio.security.model;
 
 import com.sarpio.order.model.OrderEntity;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.transaction.support.ResourceHolderSupport;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,16 +28,17 @@ public class UsersEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
+    @Schema(description = "id of existing client automatic generated", example = "1")
     private Long id;
 
     @Column(name = "password")
-    @NotBlank(message = "password can't be blank")
-    @NotEmpty(message = "username can't be empty")
+    @NotEmpty(message = "password can't be empty")
+    @Schema(description = "User password")
     private String password;
 
     @Column(name = "username")
-    @Length(min = 2, max = 30, message = "Name must be between 2-30 characters. ")
-    @Pattern(regexp = "^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$", message = "Name is invalid.")
+    @NotBlank(message = "username can't be blank")
+    @Length(min = 3, max = 15)
     private String username;
 
     @Email(message = "Enter a valid email address.")

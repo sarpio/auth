@@ -18,28 +18,28 @@ public class ProductController {
 
 
     @PostMapping("/")
-    public ProductDto saveNewProduct(@Valid @RequestBody ProductDto dto){
+    public ResponseEntity<ProductDto> saveNewProduct(@Valid @RequestBody ProductDto dto){
         dto.setId(null);
         return productService.saveNewProduct(dto);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteProduct(@PathVariable("id") Long id)  {
+    public ResponseEntity<ProductDto> deleteProduct(@PathVariable("id") Long id)  {
         return productService.deleteProduct(id);
     }
 
     @PutMapping("/{id}")
-    public ProductDto editProduct(@PathVariable("id") Long id, @RequestBody ProductDto dto) {
+    public ResponseEntity<ProductDto> editProduct(@PathVariable("id") Long id, @RequestBody ProductDto dto) {
         return productService.editProduct(id, dto);
     }
 
     @GetMapping("/")
-    public List<ProductDto> showProducts() {
+    public ResponseEntity showProducts() {
         return productService.listAllProducts();
     }
 
     @GetMapping("/{id}")
-    public ProductDto getProductById(@PathVariable("id") Long id) {
+    public ResponseEntity<ProductDto> getProductById(@PathVariable("id") Long id) {
         return productService.getProductById(id);
     }
 

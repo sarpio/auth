@@ -22,7 +22,7 @@ public class OrderController {
     }
 
     @ResponseStatus(code = HttpStatus.ACCEPTED)
-    @GetMapping("/filter")
+    @GetMapping("filter")
     public ResponseEntity find(@RequestParam(value = "id", required = false) Long id,
                                @RequestParam(value = "userId", required = false) Long userId,
                                @RequestParam(value = "status", required = false) String status) {

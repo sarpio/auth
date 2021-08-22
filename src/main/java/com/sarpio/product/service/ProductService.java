@@ -1,5 +1,6 @@
 package com.sarpio.product.service;
 
+import com.sarpio.exception.RecordNotFoundException;
 import com.sarpio.product.controller.dto.ProductDto;
 import com.sarpio.product.model.CategoryEntity;
 import com.sarpio.product.model.ProductEntity;
@@ -7,6 +8,7 @@ import com.sarpio.product.repository.CategoryRepository;
 import com.sarpio.product.repository.ProductRepository;
 import com.sarpio.product.utils.EntityDtoMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -20,45 +22,44 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
-    public ProductDto saveNewProduct(ProductDto dto) {
+    public ResponseEntity<ProductDto> saveNewProduct(ProductDto dto) {
         return getProductDto(dto);
     }
 
     public ResponseEntity deleteProduct(Long id) {
         if (!productRepository.existsById(id)) {
-
+        return new ResponseEntity("Product with Id: " + id + " not exists", HttpStatus.NOT_FOUND);
         }
         productRepository.deleteById(id);
         return ResponseEntity.ok("product with Id: " + id + " deleted!");
     }
 
-    public ProductDto editProduct(Long id, ProductDto dto) {
+    public ResponseEntity editProduct(Long id, ProductDto dto) {
         productRepository.findById(id)
-                .orElseThrow();
+                .orElseThrow(() -> new RecordNotFoundException("There is no product with Id: " + id));
         dto.setId(id);
         return getProductDto(dto);
     }
 
-    private ProductDto getProductDto(ProductDto dto) {
+    private ResponseEntity getProductDto(ProductDto dto) {
         CategoryEntity category = categoryRepository
                 .findById(dto.getCategory().getId())
                 .orElseThrow();
         ProductEntity save = EntityDtoMapper.map(dto);
         save.setCategory(category);
         productRepository.save(save);
-        return EntityDtoMapper.map(save);
+        return new ResponseEntity(EntityDtoMapper.map(save), HttpStatus.OK);
     }
 
-    public List<ProductDto> listAllProducts() {
-        List<ProductEntity> prod = productRepository.findAll();
+    public ResponseEntity listAllProducts() {
         List<ProductDto> products = productRepository.findAll()
                 .stream().map(EntityDtoMapper::map)
                 .collect(Collectors.toList());
-        return products;
+        return new ResponseEntity(products, HttpStatus.OK);
     }
 
-    public ProductDto getProductById(Long id) {
-        ProductEntity productEntity = productRepository.findById(id).orElseThrow();
-        return EntityDtoMapper.map(productEntity);
+    public ResponseEntity getProductById(Long id) {
+        ProductEntity productEntity = productRepository.findById(id).orElseThrow(() -> new RecordNotFoundException("Product with Id: " + id + " not exists"));
+        return new ResponseEntity(EntityDtoMapper.map(productEntity), HttpStatus.OK);
     }
 }

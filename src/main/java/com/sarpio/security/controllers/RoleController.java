@@ -5,7 +5,6 @@ import com.sarpio.security.services.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -15,19 +14,19 @@ public class RoleController {
 
     private final RoleService roleService;
 
-    @GetMapping("/")
+    @GetMapping
     public List<RoleDto> allRole() {
         return roleService.showAll();
     }
 
-    @PostMapping("/")
+    @PostMapping
     public RoleDto addNewRole(@RequestBody RoleDto dto) {
         roleService.addNewRole(dto);
         return dto;
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity deleteRole(@PathVariable("id") Long id) {
+    @DeleteMapping
+    public ResponseEntity deleteRole(@RequestParam("id") Long id) {
         return roleService.deleteRoleById(id);
     }
 }
